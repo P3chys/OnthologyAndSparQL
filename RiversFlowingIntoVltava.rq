@@ -1,0 +1,16 @@
+SELECT DISTINCT ?river ?riverLabel ?basinSize WHERE {
+  # Find the Vltava river first
+  wd:Q131574 wdt:P974* ?river .  # P200 is "flows into"
+  
+  FILTER(?river != wd:Q131574)
+  
+  # Get the basin size
+  ?river wdt:P2053 ?basinSize .  # P2053 represents catchment area
+  
+  # Get the labels
+  ?river rdfs:label ?riverLabel .
+  FILTER(LANG(?riverLabel) = "en")
+  
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+ORDER BY DESC(?basinSize)
