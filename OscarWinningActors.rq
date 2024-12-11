@@ -1,0 +1,28 @@
+SELECT DISTINCT ?actor ?actorLabel (COUNT(?award_statement) as ?awardCount) 
+(GROUP_CONCAT(DISTINCT ?specific_awardLabel; separator=", ") as ?awards) WHERE {
+  ?actor wdt:P106 wd:Q33999 ;    # occupation: actor
+         p:P166 ?award_statement .
+  
+  # Academy Award main property
+  ?award_statement ps:P166 ?award .
+  VALUES ?award {
+    wd:Q103618      # Academy Award
+    wd:Q103916      # Academy Award for Best Actor
+    wd:Q103618      # Academy Award for Best Actress
+    wd:Q106291      # Academy Award for Best Supporting Actor
+    wd:Q106294      # Academy Award for Best Supporting Actress
+  }
+  
+  OPTIONAL {
+    ?award_statement pq:P805 ?specific_award .  # specific award subcategory
+    ?specific_award rdfs:label ?specific_awardLabel .
+    FILTER(LANG(?specific_awardLabel) = "en")
+  }
+  
+  ?actor rdfs:label ?actorLabel .
+  FILTER(LANG(?actorLabel) = "en")
+  
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+GROUP BY ?actor ?actorLabel
+ORDER BY DESC(?awardCount) ?actorLabel

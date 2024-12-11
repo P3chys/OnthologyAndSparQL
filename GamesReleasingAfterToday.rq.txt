@@ -1,0 +1,21 @@
+SELECT DISTINCT ?game ?gameLabel ?releaseDate ?genreLabel WHERE {
+  # Find all items that are instances of video games
+  ?game wdt:P31/wdt:P279* wd:Q7889 .
+  
+  ?game rdfs:label ?gameLabel .
+  FILTER(LANG(?gameLabel) = "en")
+  
+  ?game wdt:P577 ?releaseDate .
+  FILTER(?releaseDate > "2024-12-11"^^xsd:dateTime)
+  
+  OPTIONAL {
+    ?game wdt:P136 ?genre .
+    ?genre rdfs:label ?genreLabel .
+    FILTER(LANG(?genreLabel) = "en")
+  }
+  
+  
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+ORDER BY ASC(?releaseDate)
+LIMIT 50
