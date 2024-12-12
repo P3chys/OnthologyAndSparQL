@@ -129,31 +129,6 @@ xsd:gYear rdf:type rdfs:Datatype .
                  "Kniha"@cs .
 
 
-###  http://example.org/library#BookIn1915
-:BookIn1915 rdf:type owl:Class ;
-            owl:equivalentClass [ owl:intersectionOf ( :Book
-                                                       [ rdf:type owl:Restriction ;
-                                                         owl:onProperty :hasPublicationYear ;
-                                                         owl:hasValue 1915
-                                                       ]
-                                                     ) ;
-                                  rdf:type owl:Class
-                                ] .
-
-
-###  http://example.org/library#BooksFrom1915ByEuropeanAuthors
-:BooksFrom1915ByEuropeanAuthors rdf:type owl:Class ;
-                                owl:equivalentClass [ owl:intersectionOf ( :Book
-                                                                           :BookIn1915
-                                                                           [ rdf:type owl:Restriction ;
-                                                                             owl:onProperty :hasAuthor ;
-                                                                             owl:someValuesFrom :EuropeanAuthor
-                                                                           ]
-                                                                         ) ;
-                                                      rdf:type owl:Class
-                                                    ] .
-
-
 ###  http://example.org/library#Continent
 :Continent rdf:type owl:Class ;
            rdfs:subClassOf :Region ;
@@ -193,6 +168,124 @@ xsd:gYear rdf:type rdfs:Datatype .
                   "Žánr"@cs .
 
 
+###  http://example.org/library#HistoricalBooks
+:HistoricalBooks rdf:type owl:Class ;
+                 owl:equivalentClass [ owl:intersectionOf ( :Book
+                                                            [ rdf:type owl:Class ;
+                                                              owl:complementOf :ModernBooks
+                                                            ]
+                                                          ) ;
+                                       rdf:type owl:Class
+                                     ] .
+
+
+###  http://example.org/library#HistoricalBooksByEuropeanAuthor
+:HistoricalBooksByEuropeanAuthor rdf:type owl:Class ;
+                                 owl:equivalentClass [ owl:intersectionOf ( :HistoricalBooks
+                                                                            [ rdf:type owl:Restriction ;
+                                                                              owl:onProperty :hasAuthor ;
+                                                                              owl:someValuesFrom :EuropeanAuthor
+                                                                            ]
+                                                                          ) ;
+                                                       rdf:type owl:Class
+                                                     ] .
+
+
+###  http://example.org/library#HistoricalFicitionBooks
+:HistoricalFicitionBooks rdf:type owl:Class ;
+                         owl:equivalentClass [ owl:intersectionOf ( :HistoricalBooks
+                                                                    [ rdf:type owl:Restriction ;
+                                                                      owl:onProperty :hasGenre ;
+                                                                      owl:hasValue :fiction
+                                                                    ]
+                                                                  ) ;
+                                               rdf:type owl:Class
+                                             ] .
+
+
+###  http://example.org/library#HistoricalNonFictionBooks
+:HistoricalNonFictionBooks rdf:type owl:Class ;
+                           owl:equivalentClass [ owl:intersectionOf ( :HistoricalBooks
+                                                                      [ rdf:type owl:Class ;
+                                                                        owl:complementOf [ rdf:type owl:Restriction ;
+                                                                                           owl:onProperty :hasGenre ;
+                                                                                           owl:hasValue :fiction
+                                                                                         ]
+                                                                      ]
+                                                                    ) ;
+                                                 rdf:type owl:Class
+                                               ] .
+
+
+###  http://example.org/library#ModernBooks
+:ModernBooks rdf:type owl:Class ;
+             owl:equivalentClass [ owl:intersectionOf ( :Book
+                                                        [ rdf:type owl:Restriction ;
+                                                          owl:onProperty :hasPublicationYear ;
+                                                          owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                                               owl:onDatatype xsd:integer ;
+                                                                               owl:withRestrictions ( [ xsd:minInclusive 1900
+                                                                                                      ]
+                                                                                                    )
+                                                                             ]
+                                                        ]
+                                                      ) ;
+                                   rdf:type owl:Class
+                                 ] .
+
+
+###  http://example.org/library#ModernBooksByEuropeanAuthor
+:ModernBooksByEuropeanAuthor rdf:type owl:Class ;
+                             owl:equivalentClass [ owl:intersectionOf ( :ModernBooks
+                                                                        [ rdf:type owl:Restriction ;
+                                                                          owl:onProperty :hasAuthor ;
+                                                                          owl:someValuesFrom :EuropeanAuthor
+                                                                        ]
+                                                                      ) ;
+                                                   rdf:type owl:Class
+                                                 ] .
+
+
+###  http://example.org/library#ModernBooksByOverseasAuthor
+:ModernBooksByOverseasAuthor rdf:type owl:Class ;
+                             owl:equivalentClass [ owl:intersectionOf ( :ModernBooks
+                                                                        [ rdf:type owl:Class ;
+                                                                          owl:complementOf [ rdf:type owl:Restriction ;
+                                                                                             owl:onProperty :hasAuthor ;
+                                                                                             owl:someValuesFrom :EuropeanAuthor
+                                                                                           ]
+                                                                        ]
+                                                                      ) ;
+                                                   rdf:type owl:Class
+                                                 ] .
+
+
+###  http://example.org/library#ModernFictionBooks
+:ModernFictionBooks rdf:type owl:Class ;
+                    owl:equivalentClass [ owl:intersectionOf ( :ModernBooks
+                                                               [ rdf:type owl:Restriction ;
+                                                                 owl:onProperty :hasGenre ;
+                                                                 owl:hasValue :fiction
+                                                               ]
+                                                             ) ;
+                                          rdf:type owl:Class
+                                        ] .
+
+
+###  http://example.org/library#ModernNonFictionBooks
+:ModernNonFictionBooks rdf:type owl:Class ;
+                       owl:equivalentClass [ owl:intersectionOf ( :ModernBooks
+                                                                  [ rdf:type owl:Class ;
+                                                                    owl:complementOf [ rdf:type owl:Restriction ;
+                                                                                       owl:onProperty :hasGenre ;
+                                                                                       owl:hasValue :fiction
+                                                                                     ]
+                                                                  ]
+                                                                ) ;
+                                             rdf:type owl:Class
+                                           ] .
+
+
 ###  http://example.org/library#Person
 :Person rdf:type owl:Class ;
         rdfs:label "Osoba"@cs ,
@@ -208,6 +301,59 @@ xsd:gYear rdf:type rdfs:Datatype .
 #################################################################
 #    Individuals
 #################################################################
+
+###  http://example.org/library#Asia
+:Asia rdf:type owl:NamedIndividual ,
+               :Continent .
+
+
+###  http://example.org/library#Biography
+:Biography rdf:type owl:NamedIndividual ,
+                    :Genre .
+
+
+###  http://example.org/library#Germany
+:Germany rdf:type owl:NamedIndividual ,
+                  :Country ;
+         :isLocatedIn :europe .
+
+
+###  http://example.org/library#India
+:India rdf:type owl:NamedIndividual ,
+                :Country ;
+       :isLocatedIn :Asia .
+
+
+###  http://example.org/library#Marie_Antoinette
+:Marie_Antoinette rdf:type owl:NamedIndividual ,
+                           :Book ,
+                           :ModernNonFictionBooks ;
+                  :hasAuthor :Stefan_Zweig ;
+                  :hasGenre :nonFiction ;
+                  :hasPublicationYear 1932 ;
+                  :hasTitle "Marie Antoinette" .
+
+
+###  http://example.org/library#NorthAmerica
+:NorthAmerica rdf:type owl:NamedIndividual ,
+                       :Continent .
+
+
+###  http://example.org/library#Stefan_Zweig
+:Stefan_Zweig rdf:type owl:NamedIndividual ,
+                       :Author ,
+                       :EuropeanAuthor ;
+              :hasNationality :Germany ;
+              :livesIn :Germany ;
+              :hasBirthDate "1881-11-28"^^xsd:date ;
+              :hasName "Stefan Zweig" .
+
+
+###  http://example.org/library#UnitedStates
+:UnitedStates rdf:type owl:NamedIndividual ,
+                       :Country ;
+              :isLocatedIn :NorthAmerica .
+
 
 ###  http://example.org/library#aloisJirasek
 :aloisJirasek rdf:type owl:NamedIndividual ,
@@ -234,20 +380,24 @@ xsd:gYear rdf:type rdfs:Datatype .
                    "Evropa"@cs .
 
 
-###  http://example.org/library#historicalFiction
-:historicalFiction rdf:type owl:NamedIndividual ,
-                            :Genre ;
-                   rdfs:label "Historical Fiction"@en ,
-                              "Historická beletrie"@cs .
+###  http://example.org/library#fiction
+:fiction rdf:type owl:NamedIndividual ,
+                  :Genre .
+
+
+###  http://example.org/library#nonFiction
+:nonFiction rdf:type owl:NamedIndividual ,
+                     :Genre .
 
 
 ###  http://example.org/library#temno
 :temno rdf:type owl:NamedIndividual ,
                 :Book ;
        :hasAuthor :aloisJirasek ;
+       :hasGenre :fiction ;
        :hasPublicationYear 1915 ;
        :hasTitle "temno" ;
-       rdfs:label "temno" .
+       rdfs:label "Temno" .
 
 
 [ xsd:maxInclusive "1900"^^xsd:gYear
